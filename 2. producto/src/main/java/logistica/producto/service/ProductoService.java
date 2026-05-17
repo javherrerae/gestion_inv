@@ -41,21 +41,19 @@ public class ProductoService {
             throw new RuntimeException("La fecha de caducidad no puede ser anterior a la fecha de fabricación.");
         }
 
-        try {
-            StockDTO nuevoStock = new StockDTO(
-                producto.getSku(), 
-                "POR_ASIGNAR",
-                0             
-            );
-            
-            stockClient.registrarOActualizar(nuevoStock);
+        Producto productoGuardado = repository.save(producto);
+
+        try {    
+            StockDTO nuevoStock = new StockDTO(producto.getSku(), "POR_ASIGNAR", 0);    
+
+            stockClient.inicializarStock(nuevoStock);
             
             } catch (Exception e) {
                 throw new RuntimeException
                 ("Producto creado localmente, pero falló la inicialización automática de stock: " 
                 + e.getMessage());
             }
-        return repository.save(producto);
+        return productoGuardado;
     }
 
     // Buscamos producto por SKU

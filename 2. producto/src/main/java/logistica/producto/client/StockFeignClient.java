@@ -12,4 +12,7 @@ public interface StockFeignClient {
 
     @PostMapping("/api/stock")
     ResponseEntity<?> registrarOActualizar(@RequestBody StockDTO stock);
+    
+    @PostMapping("/api/stock/inicializar") 
+    ResponseEntity<?> inicializarStock(@RequestBody StockDTO stock);
 }

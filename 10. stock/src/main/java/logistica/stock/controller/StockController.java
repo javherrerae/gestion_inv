@@ -28,6 +28,13 @@ public class StockController {
         return ResponseEntity.ok(service.listarTodos());
     }
 
+    // Endpoint exclusivo para ser consumido de manera inter-servicio
+    @PostMapping("/inicializar")
+    public ResponseEntity<Stock> inicializarStock(@RequestBody Stock stock) {
+        Stock nuevoStock = service.inicializarStock(stock);
+        return ResponseEntity.status(HttpStatus.CREATED).body(nuevoStock);
+}
+
     // 2. Registrar nuevo stock o incrementar existencias si ya existe en la ubicación
     @PostMapping
     public ResponseEntity<?> registrarOActualizar(@RequestBody Stock stock) {

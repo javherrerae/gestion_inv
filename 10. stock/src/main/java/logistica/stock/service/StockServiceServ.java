@@ -3,6 +3,7 @@ package logistica.stock.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
@@ -23,6 +24,12 @@ public class StockServiceServ {
     // 1. Listar todo el stock disponible
     public List<Stock> listarTodos() {
         return stockRepository.findAll();
+    }
+
+    // Metodo para inicializar Stock sin problemas entre servicios
+    @Transactional
+    public Stock inicializarStock(@NonNull Stock stock) {
+        return stockRepository.save(stock);
     }
 
 // 2. Registrar o incrementar Stock
