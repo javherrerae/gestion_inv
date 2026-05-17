@@ -29,10 +29,13 @@ public class ProductoController {
     }
 
     @GetMapping("/sku/{sku}")
-    public ResponseEntity<Producto> buscarPorSku(
-            @PathVariable String sku) {
-        return ResponseEntity.ok(
-                service.buscarPorSku(sku));
+    public ResponseEntity<?> buscarPorSku(@PathVariable String sku) {
+        Producto producto = service.buscarPorSku(sku);
+        if (producto == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("El producto con SKU " + sku + " no existe.");
+        }
+        return ResponseEntity.ok(producto);
     }
 
     // Registrar producto

@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
-import logistica.stock.client.StockClient;
+import logistica.stock.client.ProductClient;
 import logistica.stock.model.Stock;
 import logistica.stock.repository.StockRepository;
 
@@ -16,25 +16,33 @@ public class StockServiceServ {
     @Autowired
     private StockRepository stockRepository;
 
+    // Conexión con Producto
     @Autowired
-    private StockClient productoClient;
+    private ProductClient productoClient;
 
     // 1. Listar todo el stock disponible
     public List<Stock> listarTodos() {
         return stockRepository.findAll();
     }
 
-    // 2. Registrar o incrementar Stock
+// 2. Registrar o incrementar Stock
     @Transactional
     public Stock registrarOActualizar(Stock stock) {
-        // Validar de forma sincrónica si el SKU existe en el otro microservicio
         try {
-            var response = productoClient.buscarPorSku(stock.getSku());
-            if (response == null || response.getStatusCode().isError()) {
+            // Verificar si el producto existe
+            productoClient.buscarPorSku(stock.getSku());
+            
+        } catch (feign.FeignException e) {
+            // Feign intercepta las respuestas de error (4xx y 5xx) del microservicio de productos
+            if (e.status() == 404) {
                 throw new RuntimeException("El SKU '" + stock.getSku() + "' no existe en el catálogo de productos.");
             }
+            throw new RuntimeException("Error en el microservicio de productos: " + e.contentUTF8());
+            
         } catch (Exception e) {
-            throw new RuntimeException("Error de comunicación inter-servicio: No se pudo validar el producto. " + e.getMessage());
+            // Captura errores desconocidos
+            throw new RuntimeException("Error de comunicación inter-servicio: No se pudo conectar con el catálogo. "
+            + e.getMessage());
         }
 
         // Evitar que ingresen directo valores negativos por Postman
@@ -46,9 +54,8 @@ public class StockServiceServ {
         Stock stockExistente = stockRepository.findBySkuAndIdUbicacion(stock.getSku(), stock.getIdUbicacion());
 
         if (stockExistente != null) {
-            Stock stockActualizar = stockExistente;
-            stockActualizar.setCantDisponibles(stockActualizar.getCantDisponibles() + stock.getCantDisponibles());
-            return stockRepository.save(stockActualizar);
+            stockExistente.setCantDisponibles(stockExistente.getCantDisponibles() + stock.getCantDisponibles());
+            return stockRepository.save(stockExistente);
         } else {
             return stockRepository.save(stock);
         }

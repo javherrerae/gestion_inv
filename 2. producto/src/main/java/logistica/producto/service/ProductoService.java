@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import jakarta.transaction.Transactional;
+import logistica.producto.client.StockFeignClient;
+import logistica.producto.dto.StockDTO;
 import logistica.producto.model.Producto;
 import logistica.producto.repository.ProductoRepository;
 
@@ -14,6 +16,11 @@ public class ProductoService {
 
     @Autowired
     private ProductoRepository repository;
+
+    // Conexión con Stock
+    @Autowired
+    private StockFeignClient stockClient;
+
 
     // Listamos todos los productos
     public List<Producto> listarTodos() {
@@ -33,6 +40,21 @@ public class ProductoService {
 
             throw new RuntimeException("La fecha de caducidad no puede ser anterior a la fecha de fabricación.");
         }
+
+        try {
+            StockDTO nuevoStock = new StockDTO(
+                producto.getSku(), 
+                "POR_ASIGNAR",
+                0             
+            );
+            
+            stockClient.registrarOActualizar(nuevoStock);
+            
+            } catch (Exception e) {
+                throw new RuntimeException
+                ("Producto creado localmente, pero falló la inicialización automática de stock: " 
+                + e.getMessage());
+            }
         return repository.save(producto);
     }
 

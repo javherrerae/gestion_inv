@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 // "producto-service" debe ser el nombre exacto configurado en el application.properties de Producto
 @FeignClient(name = "producto") 
-public interface StockClient {
+public interface ProductClient {
 
     // Apunta exactamente al GetMapping del SKU de tu ProductoController
     @GetMapping("/api/productos/sku/{sku}")
