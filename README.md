@@ -1,10 +1,7 @@
-                                        Sistema de gestión de inventario y logística.
-                                        
----------------------------------------------------------------------------------------------------------
 <div align="center">
 
 <h1 style="color:#2563eb;">
-Sistema Logístico
+Sistema logístico
 </h1>
 
 <h3>
@@ -144,22 +141,6 @@ Para visualizar el modelado relacional utilizado dentro del proyecto:
 </p>
 
 <ul>
-<li>
-Descargar la carpeta 
-<a href="./modelado%20microservicios" target="_blank">
-modelado microservicios
-</a>
-</li>
-
----
-
-<h2 style="color:#2563eb;">🗄️ Modelado de base de datos</h2>
-
-<p>
-Para visualizar el modelado relacional utilizado dentro del proyecto:
-</p>
-
-<ul>
 
 <li>
 Descargar Oracle SQL Data Modeler desde:
@@ -169,12 +150,13 @@ Oracle SQL Data Modeler
 </li>
 
 <li>
-Extraer la carpeta <b>modelado microservicios</b>
+Descargar y extraer la carpeta <b>modelado microservicios</b>
 </li>
 
 <li>
 Abrir el proyecto desde Oracle SQL Data Modeler
 </li>
+
 </ul>
 
 <p>
@@ -215,19 +197,22 @@ El modelado fue desarrollado previamente para mantener coherencia entre el flujo
 <li>Desconsolidación</li>
 <li>Producto</li>
 <li>Warehouse</li>
+<li>Stock</li>
 </ul>
 
 <h3>En proceso</h3>
 
 <ul>
-<li>Stock</li>
 <li>Movimiento</li>
 </ul>
 
-Arquitectura pendiente:
-_ Gateway
-_ Mysql
-_ Eureka
+<h3>Arquitectura pendiente</h3>
+
+<ul>
+<li>API Gateway</li>
+<li>MySQL Server centralizado</li>
+<li>Eureka completo con integración total</li>
+</ul>
 
 ---
 
@@ -253,4 +238,8 @@ El presente proyecto fue desarrollado con enfoque académico para la asignatura 
 
 <p>
 Su objetivo consiste en representar procesos reales utilizados actualmente dentro de operaciones fulfillment y administración de warehouse modernas, utilizando arquitectura de microservicios para mantener una solución modular, escalable y desacoplada.
+</p>
+
+<p>
+El sistema busca integrar conceptos de logística, trazabilidad, control de inventario y desarrollo backend utilizando tecnologías como Spring Boot, APIs REST y modelado de bases de datos relacionales.
 </p>
