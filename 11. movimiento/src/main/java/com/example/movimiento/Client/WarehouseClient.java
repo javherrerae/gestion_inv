@@ -7,6 +7,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 // Consultamos que la ID de la Ubicación del RACK a la que estamos guardando exista
 @FeignClient(name = "warehouse")
 public interface WarehouseClient {
-    @GetMapping("/api/warehouse/{idUbicacion}")
+    @GetMapping("/api/warehouse/ubicacion/{idUbicacion}")
     Object buscarUbicacion(@PathVariable String idUbicacion);
 }
