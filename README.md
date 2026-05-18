@@ -4,7 +4,7 @@
 <div align="center">
 
 <h1 style="color:#2563eb;">
-🚛 SmartWarehouse Logistics System
+Sistema Logístico
 </h1>
 
 <h3>
