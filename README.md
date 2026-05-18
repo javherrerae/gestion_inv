@@ -3,6 +3,7 @@
 Nota Acxel: Quizás sea buena idea crear un archivo con Changelog para dejar el Readme limpio
 
 ---------------------- CHANGELOG -------------------------
+
 [17-05-2027] Actualización v1.0:
 El sistema se encuentra funcional en su estado base. Se esperan futuras integraciones de más microservicios (principalmente el microservicio de movimiento y el de api-gateway), junto con la finalización de la gestión de usuarios y autenticación.
 
