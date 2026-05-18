@@ -140,24 +140,35 @@ Cada microservicio posee:
 <h2 style="color:#2563eb;">🗄️ Modelado de base de datos</h2>
 
 <p>
-El sistema fue modelado previamente utilizando Oracle SQL Data Modeler, diseñando entidades relacionadas con:
+Para visualizar el modelado relacional utilizado dentro del proyecto:
 </p>
 
 <ul>
-<li>usuarios</li>
-<li>recepción</li>
-<li>productos</li>
-<li>warehouse</li>
-<li>stock</li>
-<li>movimientos</li>
-<li>facturas</li>
-<li>desconsolidación</li>
-<li>camiones</li>
-<li>andenes</li>
+<li>
+Descargar la carpeta 
+<a href="./modelado%20microservicios" target="_blank">
+modelado microservicios
+</a>
+</li>
+
+<li>
+Descargar Oracle SQL Data Modeler desde:
+<a href="https://www.oracle.com/database/sqldeveloper/technologies/sql-data-modeler/download/" target="_blank">
+Oracle SQL Data Modeler
+</a>
+</li>
+
+<li>
+Extraer la carpeta <b>modelado microservicios</b>
+</li>
+
+<li>
+Abrir el proyecto desde Oracle SQL Data Modeler
+</li>
 </ul>
 
 <p>
-El objetivo del modelado fue mantener coherencia entre la lógica logística y la arquitectura de microservicios implementada posteriormente.
+El modelado fue desarrollado previamente para mantener coherencia entre el flujo logístico y la arquitectura de microservicios implementada posteriormente.
 </p>
 
 ---
