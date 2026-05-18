@@ -163,7 +163,7 @@ Abrir el proyecto desde Oracle SQL Data Modeler
 </ul>
 
 <p>
-El modelado fue desarrollado previamente para mantener coherencia entre el flujo logístico y la arquitectura de microservicios implementada posteriormente.
+El modelado fue desarrollado previamente para mantener coherencia entre el flujo logístico y la arquitectura de microservicios.
 </p>
 
 ---
