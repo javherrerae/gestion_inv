@@ -12,7 +12,7 @@ Historial de actualizaciones del proyecto SmartWarehouse Logistics System
 
 ---
 
-<h2 style="color:#2563eb;">Versión 0.5 — 17/05/2026</h2>
+<h2 style="color:#2563eb;">Versión 0.4.5 — 17/05/2026</h2>
 
 <h3>Estado general</h3>
 
