@@ -151,6 +151,16 @@ modelado microservicios
 </a>
 </li>
 
+---
+
+<h2 style="color:#2563eb;">🗄️ Modelado de base de datos</h2>
+
+<p>
+Para visualizar el modelado relacional utilizado dentro del proyecto:
+</p>
+
+<ul>
+
 <li>
 Descargar Oracle SQL Data Modeler desde:
 <a href="https://www.oracle.com/database/sqldeveloper/technologies/sql-data-modeler/download/" target="_blank">
