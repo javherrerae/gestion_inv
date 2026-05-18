@@ -5,10 +5,27 @@
 </h1>
 
 <h3>
-Historial de actualizaciones del proyecto SmartWarehouse Logistics System
+Historial de actualizaciones del proyecto Royal Logistics
 </h3>
 
 </div>
+
+<h2 style="color:#2563eb;">Versión 0.5 — 18/05/2026</h2>
+
+<h3>Nuevas funcionalidades</h3>
+
+<ul>
+<li>Finalización del microservicio Movimiento</li>
+<li>Implementación del registro de movimientos logísticos para trazabilidad operacional</li>
+</ul>
+
+<h3>Documentación y presentación</h3>
+
+<ul>
+<li>Creación de presentación del proyecto en formato PPT</li>
+<li>Actualización de material de apoyo para la exposición final</li>
+</ul>
+
 
 ---
 
