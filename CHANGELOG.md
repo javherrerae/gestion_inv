@@ -16,7 +16,6 @@ Historial de actualizaciones del proyecto Royal Logistics
 
 <ul>
 <li>Finalización del microservicio Movimiento</li>
-<li>Implementación del registro de movimientos logísticos para trazabilidad operacional</li>
 </ul>
 
 <h3>Documentación y presentación</h3>
