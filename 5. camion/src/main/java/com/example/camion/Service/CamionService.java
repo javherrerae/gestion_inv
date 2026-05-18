@@ -28,4 +28,13 @@ public class CamionService {
         return camionRepository.save(camion);
     }
 
+    public boolean eliminarCamionPorPatente(String patente) {
+        // Usamos existsById porque la patente ES el ID
+        if (camionRepository.existsById(patente)) {
+            camionRepository.deleteById(patente);
+            return true;
+        }
+        return false;
+    }
+
 }
