@@ -10,6 +10,8 @@ import com.example.recepcion.Model.Recepcion;
 @Repository 
 public interface RecepcionRepository extends JpaRepository<Recepcion, Long> {
 
+    Recepcion findByIdRecepcion(Long idRecepcion);
+
     // Buscar por estado
     List<Recepcion> findByEstado(String estado);
 
@@ -17,5 +19,5 @@ public interface RecepcionRepository extends JpaRepository<Recepcion, Long> {
     List<Recepcion> findByPatente(String patente);
 
     // Buscar por andén
-    List<Recepcion> findByNAnden(Long nAnden);
+    List<Recepcion> findByNumeroAnden(Long numeroAnden);
 }

@@ -7,5 +7,5 @@ import com.example.camion.Model.Camion;
 
 @Repository
 public interface CamionRepository extends JpaRepository<Camion, String> {
-
+    Camion findByPatente(String patente);
 }

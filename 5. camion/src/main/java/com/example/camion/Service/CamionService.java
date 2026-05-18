@@ -20,6 +20,10 @@ public class CamionService {
         return camionRepository.findAll();
     }
 
+    public Camion buscarPorPatente(String patente){
+        return camionRepository.findByPatente(patente);
+    }
+
     public Camion guardar(@NotNull Camion camion) {
         return camionRepository.save(camion);
     }

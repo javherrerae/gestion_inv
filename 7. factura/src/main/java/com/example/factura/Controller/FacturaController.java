@@ -23,6 +23,18 @@ public class FacturaController {
         return ResponseEntity.ok(service.listarTodas());
     }
 
+    @GetMapping("/{numeroFactura}")
+    public ResponseEntity<?> buscarPorNumeroFactura(@PathVariable String numeroFactura) {
+        Factura factura = service.buscarPorNumeroFactura(numeroFactura);
+        
+        if (factura == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("El número de factura '" + numeroFactura + "' no existe en los registros.");
+        }
+        
+        return ResponseEntity.ok(factura);
+    }
+
     // Registrar factura
     @PostMapping
     public ResponseEntity<?> registrar(@RequestBody Factura factura) {
@@ -62,9 +74,9 @@ public class FacturaController {
 
     // Eliminar factura
     @DeleteMapping("/{nFactura}")
-    public ResponseEntity<?> eliminar(@PathVariable String nFactura) {
+    public ResponseEntity<?> eliminar(@PathVariable String numeroFactura) {
         try {
-            service.eliminar(nFactura);
+            service.eliminar(numeroFactura);
             return ResponseEntity.ok("Factura eliminada correctamente");
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST)

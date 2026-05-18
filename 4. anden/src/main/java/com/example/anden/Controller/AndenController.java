@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,18 @@ public class AndenController {
     public ResponseEntity<List<Anden>> listar() {
         List<Anden> andenes = andenService.listartodos();
         return ResponseEntity.ok(andenes);      // Devuelve 200 OK
+    }
+
+    @GetMapping("/{nAnden}")
+    public ResponseEntity<?> buscarPorNumero(@PathVariable Long nAnden) {
+        Anden anden = andenService.buscarPorNumero(nAnden);
+        
+        if (anden == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("El andén número " + nAnden + " no existe en el sistema.");
+        }
+        
+        return ResponseEntity.ok(anden);
     }
 
     @PostMapping

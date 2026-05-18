@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AndenRepository extends JpaRepository<Anden, Integer> {
+    Anden findByNumeroanden(Long numeroanden);
     // List<Anden> findByEstado(String estado);
 }

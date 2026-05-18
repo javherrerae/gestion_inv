@@ -21,6 +21,9 @@ public class WarehouseService {
         return repository.findAll();
     }
 
+    public Warehouse buscarPorIdUbicacion(String idUbicacion) {
+        return repository.findById(idUbicacion).orElse(null);
+    }
     // Registramos una ubicación
     @Transactional
     public Warehouse registrar(Warehouse warehouse) {

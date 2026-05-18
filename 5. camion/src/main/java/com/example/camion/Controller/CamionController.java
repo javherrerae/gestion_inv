@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +31,19 @@ public class CamionController {
         List<Camion> camiones = camionService.listarTodos();
         return ResponseEntity.ok(camiones);
     }
+
+    @GetMapping("/patente/{patente}")
+    public ResponseEntity<?> buscarPorPatente(@PathVariable String patente) {
+        // Buscamos el camión en el servicio
+        Camion camion = camionService.buscarPorPatente(patente); 
+    
+        if (camion == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("El camión con patente '" + patente + "' no está registrado.");
+            }
+        
+            return ResponseEntity.ok(camion);
+        }
 
     @PostMapping
     public ResponseEntity<Camion> crear(@Valid @RequestBody Camion camion) {

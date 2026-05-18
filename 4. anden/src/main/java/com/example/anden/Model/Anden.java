@@ -18,7 +18,7 @@ public class Anden {
 
     @Id
     @Column(nullable = false)
-    private int numeroanden;
+    private Long numeroanden;
 
     @Column(nullable = false)
     @NotBlank

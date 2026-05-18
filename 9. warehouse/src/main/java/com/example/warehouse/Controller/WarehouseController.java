@@ -23,6 +23,18 @@ public class WarehouseController {
         return ResponseEntity.ok(service.listarTodas());
     }
 
+    @GetMapping("/ubicacion/{idUbicacion}")
+    public ResponseEntity<?> buscarPorIdUbicacion(@PathVariable String idUbicacion) {
+        Warehouse warehouse = service.buscarPorIdUbicacion(idUbicacion);
+        
+        if (warehouse == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("La ubicación física '" + idUbicacion + "' no existe en los registros de la bodega.");
+        }
+        
+        return ResponseEntity.ok(warehouse);
+    }
+
     // Registrar ubicación
     @PostMapping
     public ResponseEntity<?> registrar(

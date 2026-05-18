@@ -8,8 +8,10 @@ import com.example.desconsolidacion.Model.Desconsolidacion;
 @Repository
 public interface DesconsolidacionRepository extends JpaRepository<Desconsolidacion, Long> {
 
+    Desconsolidacion findByIdDesconsolidacion(Long idDesconsolidacion);
+
     // Buscar por número de factura
-    List<Desconsolidacion> findByNFactura(Long nFactura);
+    List<Desconsolidacion> findByNumeroFactura(String numeroFactura);
 
     // Buscar por cantidad de productos
     List<Desconsolidacion> findByCantidadProductos(Integer cantidadProductos);

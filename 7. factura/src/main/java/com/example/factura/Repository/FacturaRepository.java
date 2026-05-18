@@ -10,6 +10,8 @@ import com.example.factura.Model.Factura;
 @Repository
 public interface FacturaRepository extends JpaRepository<Factura, String> {
 
+    Factura findByNumeroFactura(String numeroFactura);
+
     List<Factura> findByEstado(String estado);
 
     List<Factura> findByProveedor(String proveedor);

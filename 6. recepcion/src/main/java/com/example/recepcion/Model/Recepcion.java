@@ -28,7 +28,7 @@ public class Recepcion {
     // Usamos Long porque es más fácil trabajarla con la base de datos, además nos permite null.
     @NotNull(message = "El número de anden es obligatorio")
     @Column(nullable = false)
-    private Long nAnden;
+    private Long numeroAnden;
 
     @NotBlank(message = "La patente es obligatoria")
     @Column(nullable = false, length = 6)

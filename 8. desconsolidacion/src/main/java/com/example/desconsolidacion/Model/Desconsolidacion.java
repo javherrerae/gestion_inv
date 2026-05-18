@@ -26,7 +26,7 @@ public class Desconsolidacion {
 
     @NotNull(message = "El número de factura es obligatorio")
     @Column(nullable = false)
-    private Long nFactura;
+    private String numeroFactura;
 
     // Integer permite validar valores nulos
     @NotNull(message = "La cantidad de productos es obligatoria")

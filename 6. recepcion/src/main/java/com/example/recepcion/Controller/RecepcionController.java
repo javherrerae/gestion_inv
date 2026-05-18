@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -30,9 +31,21 @@ public class RecepcionController {
         return ResponseEntity.ok(service.listarTodas()); 
     }
 
+    @GetMapping("/id/{idRecepcion}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Long idRecepcion) {
+        Recepcion recepcion = service.buscarPorId(idRecepcion);
+        
+        if (recepcion == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("No se encontró ningún registro de recepción con el ID: " + idRecepcion);
+        }
+        
+        return ResponseEntity.ok(recepcion);
+    }
+
     // Registramos recepción
 
-    @PatchMapping
+    @PostMapping
     public ResponseEntity<?> registrar(@RequestBody Recepcion recepcion) {
         try {
             Recepcion nuevaRecepcion = service.registrar(recepcion);

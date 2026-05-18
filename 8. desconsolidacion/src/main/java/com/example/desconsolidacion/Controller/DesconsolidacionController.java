@@ -29,6 +29,18 @@ public class DesconsolidacionController {
         return ResponseEntity.ok(service.listarTodas());
     }
 
+    @GetMapping("/{idDesconsolidacion}")
+    public ResponseEntity<?> buscarPorId(@PathVariable Long idDesconsolidacion) {
+        Desconsolidacion desconsolidacion = service.buscarPorId(idDesconsolidacion);
+        
+        if (desconsolidacion == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("La desconsolidación con ID " + idDesconsolidacion + " no existe.");
+        }
+        
+        return ResponseEntity.ok(desconsolidacion);
+    }
+
     // Registrar desconsolidación
     @PostMapping
     public ResponseEntity<?> registrar(
@@ -45,11 +57,11 @@ public class DesconsolidacionController {
     }
 
     // Buscar por factura
-    @GetMapping("/factura/{nFactura}")
+    @GetMapping("/factura/{numeroFactura}")
     public ResponseEntity<List<Desconsolidacion>> buscarPorFactura(
-            @PathVariable Long nFactura) {
+            @PathVariable String numeroFactura) {
         return ResponseEntity.ok(
-                service.buscarPorFactura(nFactura));
+                service.buscarPorFactura(numeroFactura));
     }
 
     // Buscar por cantidad de productos

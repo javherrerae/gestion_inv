@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.factura.Model.Factura;
 import com.example.factura.Repository.FacturaRepository;
+import com.example.factura.client.RecepcionClient;
 
 import jakarta.transaction.Transactional;
 
@@ -16,16 +17,31 @@ public class FacturaService {
     @Autowired
     private FacturaRepository repository;
 
-    // Listamos todas las facturas
+    @Autowired
+    private RecepcionClient recepcionClient;
 
+    // Listamos todas las facturas
     public List<Factura> listarTodas() {
         return repository.findAll();
+    }
+
+    public Factura buscarPorNumeroFactura(String numeroFactura){
+        return repository.findByNumeroFactura(numeroFactura);
     }
 
     // Registramos una factura
 
     @Transactional
     public Factura registrar(Factura factura) {
+
+        // Validar si el ID de Recepción ingresado es válido
+        try {
+            recepcionClient.buscarPorId(factura.getIdRecepcion());
+        } catch (feign.FeignException.NotFound e) {
+            throw new RuntimeException("Operación rechazada: La recepción con ID " + factura.getIdRecepcion() + " no existe.");
+        } catch (Exception e) {
+            throw new RuntimeException("Error de comunicación inter-servicio con Recepciones.");
+        }
 
         // Solo se permiten los siguientes estados de factura: REGISTRADA, EN_REVISION, VALIDADA, RECHAZADA
 

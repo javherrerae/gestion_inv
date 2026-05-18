@@ -23,7 +23,7 @@ public class Factura {
     @Id
     @NotBlank(message = "El n° de factura es obligatorio")
     @Column(nullable = false, length = 20)
-    private String nFactura;
+    private String numeroFactura;
 
     @NotNull(message = "El ID de recepcion es obligatorio")
     @Column(nullable = false)
