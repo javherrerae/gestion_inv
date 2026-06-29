@@ -187,37 +187,29 @@ El modelado fue desarrollado previamente para mantener coherencia entre el flujo
 
 <h2 style="color:#2563eb;">📊 Estado actual del proyecto</h2>
 
-<p>
-El proyecto <b>Royal Logistics</b> se encuentra en estado defendible como ecosistema de microservicios. La versión actual incorpora configuración YAML, Eureka Server, API Gateway, documentación Swagger/OpenAPI, pruebas unitarias, Docker Compose, script de inicialización de base de datos y scripts de ejecución para Windows.
-</p>
+El proyecto **Royal Logistics** se encuentra en estado defendible como ecosistema de microservicios. La versión actual incorpora configuración YAML, Eureka Server, API Gateway, documentación Swagger/OpenAPI, pruebas unitarias con JUnit 5 y Mockito, Docker Compose, script de inicialización de base de datos y guías de ejecución para Windows.
 
 | Área | Estado | Observación |
 |---|---:|---|
 | Arquitectura de microservicios | Listo | Proyecto separado en módulos independientes. |
 | Maven multi-módulo | Listo | Existe un `pom.xml` padre que centraliza módulos y dependencias. |
 | Java 21 / Spring Boot | Listo | Los servicios están implementados con Spring Boot y Java 21. |
-| Eureka Server | Listo | Disponible en `http://localhost:8761`. |
-| API Gateway | Listo | Disponible en `http://localhost:8080`. |
-| Swagger/OpenAPI | Listo | Accesible desde el API Gateway. |
-| YAML | Listo | Los servicios usan `application.yml`. |
-| Pruebas unitarias | Listo | Se validan con `mvn clean test`. |
+| Eureka Server | Listo | Servidor de descubrimiento disponible en el puerto `8761`. |
+| API Gateway | Listo | Punto de entrada central disponible en el puerto `8080`. |
+| YAML | Listo | La configuración fue migrada a `application.yml`. |
+| Swagger/OpenAPI | Listo | Documentación centralizada desde el API Gateway. |
+| Pruebas unitarias | Listo | Suite ejecutable con `mvn clean install`. |
 | Docker Compose | Listo con observaciones | Levanta MySQL, Eureka, Gateway y microservicios logísticos principales. |
 | Base de datos Docker | Listo | MySQL se ejecuta en contenedor y usa volumen persistente. |
 | `docs/init.sql` | Listo | Crea las bases de datos necesarias al primer arranque de MySQL. |
 | Autenticación | Parcial | Módulo creado, pero no forma parte del flujo logístico principal validado. |
-| Creación de usuario | Parcial en Docker | Módulo creado y ruta Gateway configurada, pero no está incluido en el Docker Compose principal. |
+| Creación de usuario | Parcial en Docker | Módulo creado y ruta Gateway configurada, pero no está incluido en el Docker Compose principal validado. |
 
 ---
 
-<h2 style="color:#2563eb;">🐳 Puesta en marcha con Docker</h2>
+<h2 style="color:#2563eb;">🧩 Componentes del sistema</h2>
 
-## 1. Descripción general
-
-Este documento explica cómo ejecutar el ecosistema de microservicios **Royal Logistics** utilizando **Docker** y **Docker Compose**.
-
-Docker permite levantar los componentes principales del sistema en contenedores independientes, evitando iniciar manualmente cada microservicio desde el IDE. Cada servicio se ejecuta de forma aislada, pero todos se comunican mediante una red interna de Docker.
-
-El despliegue actual considera los siguientes componentes:
+El ecosistema considera los siguientes componentes principales:
 
 ```text
 MySQL
@@ -234,88 +226,66 @@ Microservicio de Stock
 Microservicio de Movimiento
 ```
 
-> Nota: los módulos `autenticacion` y `creacion-usuario` existen dentro del proyecto, pero no forman parte del Docker Compose principal validado. Se mantienen como servicios complementarios o mejora futura del despliegue.
+> Nota: los módulos `autenticacion` y `creacion-usuario` existen dentro del proyecto. Sin embargo, el despliegue Docker validado se concentra en el flujo logístico principal.
 
 ---
 
-## 2. Objetivo del despliegue
+<h2 style="color:#2563eb;">🧱 Estructura general del proyecto</h2>
 
-El objetivo del despliegue con Docker es ejecutar Royal Logistics como un sistema distribuido compuesto por varios microservicios.
-
-Con Docker Compose es posible levantar el ecosistema mediante un solo comando, incluyendo base de datos, servidor de descubrimiento, API Gateway y servicios logísticos.
-
-El flujo general es:
+La estructura esperada del proyecto considera los siguientes módulos y archivos principales:
 
 ```text
-Usuario / Postman / Swagger
-        ↓
-API Gateway :8080
-        ↓
-Eureka Server :8761
-        ↓
-Microservicios logísticos
-        ↓
-MySQL en Docker
-```
-
----
-
-## 3. Importante: el ZIP no es una imagen Docker completa
-
-El archivo ZIP del proyecto **no corresponde a una imagen Docker completa**.
-
-El ZIP corresponde al código fuente y paquete de despliegue del sistema Royal Logistics. Docker utiliza los archivos del proyecto para construir las imágenes y levantar los contenedores necesarios.
-
-El proyecto incluye:
-
-```text
-Código fuente de los microservicios.
-Archivos Dockerfile para los servicios principales.
-Archivo docker-compose.yml.
-Archivo docs/init.sql.
-Scripts Iniciar.bat y Cerrar.bat.
-README con instrucciones de puesta en marcha.
-```
-
-El archivo principal de configuración del despliegue es:
-
-```text
-docker-compose.yml
-```
-
-En el `docker-compose.yml` se define:
-
-```text
-Qué servicios se ejecutan.
-Qué Dockerfile se usa para construir cada servicio.
-Qué puertos se exponen.
-Qué variables de entorno se usan.
-Qué red interna conecta los servicios.
-Qué volumen se utiliza para MySQL.
-Qué servicios dependen de otros.
-```
-
-Por lo tanto:
-
-```text
-El ZIP no reemplaza a Docker.
-El docker-compose.yml define cómo Docker debe levantar el ecosistema.
-Los .jar son generados por Maven en las carpetas target/ de cada microservicio.
+Royal Logistics/
+├── 0. eureka-server/
+├── 1. autenticacion/
+├── 2. producto/
+├── 3. creacion-usuario/
+├── 4. anden/
+├── 5. camion/
+├── 6. recepcion/
+├── 7. factura/
+├── 8. desconsolidacion/
+├── 9. warehouse/
+├── 10. stock/
+├── 11. movimiento/
+├── 12. api-gateway/
+├── docs/
+│   └── init.sql
+├── backups/
+├── docker-compose.yml
+├── Iniciar.bat
+├── Cerrar.bat
+├── README_Royal_Logistics.md
+└── pom.xml
 ```
 
 ---
 
-## 4. Requisito obligatorio: Docker Desktop debe estar abierto
+<h2 style="color:#2563eb;">⚙️ Requisitos previos</h2>
 
-Antes de ejecutar el sistema, se debe abrir **Docker Desktop**.
+Antes de ejecutar el sistema, se debe contar con:
 
-Si Docker Desktop no está iniciado, los comandos de Docker no funcionarán.
+```text
+Java 21 instalado.
+Maven instalado.
+Docker Desktop instalado.
+Docker Desktop abierto y funcionando.
+Puerto 8761 disponible para Eureka Server.
+Puerto 8080 disponible para API Gateway.
+Puerto 3307 disponible para MySQL Docker.
+```
 
-Antes de levantar el sistema, se puede verificar Docker con:
+Para validar Docker desde CMD, PowerShell o la terminal de VSCode:
 
 ```bash
 docker --version
+```
+
+```bash
 docker compose version
+```
+
+```bash
 docker info
 ```
 
@@ -325,199 +295,186 @@ Si aparece un error similar a:
 Cannot connect to the Docker daemon
 ```
 
-or:
+significa que Docker Desktop no está abierto o que el motor de Docker aún no ha iniciado.
+
+---
+
+<h2 style="color:#2563eb;">🚀 Puesta en marcha nativa con script `.bat`</h2>
+
+Además del despliegue con Docker, el sistema puede ejecutarse de forma nativa en Windows utilizando Maven. En este modo los microservicios corren directamente en el sistema operativo, no dentro de contenedores.
+
+La ejecución nativa debe respetar el siguiente orden jerárquico de arranque:
 
 ```text
-open //./pipe/DockerDesktopLinuxEngine: The system cannot find the file specified
+1. Eureka Server
+2. Microservicios logísticos
+3. API Gateway
 ```
 
-significa que Docker Desktop no está abierto o que el motor de Docker todavía no ha iniciado.
+Este orden es importante porque los microservicios necesitan registrarse primero en Eureka Server, y el API Gateway necesita consultar Eureka para enrutar las solicitudes hacia los servicios disponibles.
 
-Solución:
+### Script sugerido: `Iniciar-Nativo.bat`
+
+Crear un archivo llamado `Iniciar-Nativo.bat` en la raíz del proyecto con el siguiente contenido:
+
+```bat
+@echo off
+title Royal Logistics - Ejecucion Nativa
+cls
+
+echo ==========================================================
+echo        ROYAL LOGISTICS - EJECUCION NATIVA
+echo ==========================================================
+echo.
+
+echo [1/3] Iniciando Eureka Server...
+start "Eureka Server" cmd /k "cd /d ""0. eureka-server"" && mvn spring-boot:run"
+
+echo Esperando inicializacion de Eureka Server...
+timeout /t 15 /nobreak
+
+echo.
+echo [2/3] Iniciando microservicios logisticos...
+start "Anden" cmd /k "cd /d ""4. anden"" && mvn spring-boot:run"
+start "Camion" cmd /k "cd /d ""5. camion"" && mvn spring-boot:run"
+start "Recepcion" cmd /k "cd /d ""6. recepcion"" && mvn spring-boot:run"
+start "Factura" cmd /k "cd /d ""7. factura"" && mvn spring-boot:run"
+start "Desconsolidacion" cmd /k "cd /d ""8. desconsolidacion"" && mvn spring-boot:run"
+start "Producto" cmd /k "cd /d ""2. producto"" && mvn spring-boot:run"
+start "Warehouse" cmd /k "cd /d ""9. warehouse"" && mvn spring-boot:run"
+start "Stock" cmd /k "cd /d ""10. stock"" && mvn spring-boot:run"
+start "Movimiento" cmd /k "cd /d ""11. movimiento"" && mvn spring-boot:run"
+
+echo Esperando registro de microservicios en Eureka...
+timeout /t 25 /nobreak
+
+echo.
+echo [3/3] Iniciando API Gateway...
+start "API Gateway" cmd /k "cd /d ""12. api-gateway"" && mvn spring-boot:run"
+
+echo Esperando inicializacion del API Gateway...
+timeout /t 10 /nobreak
+
+echo.
+echo Abriendo Eureka Server...
+start http://localhost:8761
+
+echo Abriendo Swagger/OpenAPI centralizado...
+start http://localhost:8080/swagger-ui/index.html
+
+echo.
+echo ==========================================================
+echo SISTEMA INICIADO EN MODO NATIVO
+echo ==========================================================
+echo.
+pause
+```
+
+### Consideraciones de la ejecución nativa
 
 ```text
-1. Abrir Docker Desktop.
-2. Esperar a que Docker quede iniciado.
-3. Volver a ejecutar el comando o el script Iniciar.bat.
+Debe existir Java 21 instalado en el equipo.
+Debe existir Maven instalado y disponible en la variable PATH.
+Eureka Server debe iniciar primero.
+Los microservicios deben iniciar antes que el API Gateway.
+API Gateway debe iniciar al final.
+MySQL debe estar disponible según la configuración de los application.yml.
 ```
 
 ---
 
-## 5. Requisitos previos
+<h2 style="color:#2563eb;">🐳 Puesta en marcha con Docker</h2>
 
-Antes de ejecutar el sistema, se debe contar con:
+Docker permite levantar los componentes principales del sistema en contenedores independientes, evitando iniciar manualmente cada microservicio desde el IDE. Cada servicio se ejecuta de forma aislada, pero todos se comunican mediante una red interna de Docker.
+
+El archivo principal de configuración es:
 
 ```text
-Docker Desktop instalado.
-Docker Desktop abierto y funcionando.
-Java 21 instalado.
-Maven instalado y disponible en la terminal.
-Carpeta del proyecto Royal Logistics.
-Archivo docker-compose.yml.
-Carpeta docs con archivo init.sql.
-Scripts Iniciar.bat y Cerrar.bat.
+docker-compose.yml
 ```
 
-En laboratorio o en un equipo local, se debe verificar que Docker Desktop esté abierto antes de ejecutar el sistema.
+Este archivo define:
+
+```text
+Qué servicios se ejecutan.
+Qué imágenes Docker se construyen.
+Qué puertos se exponen.
+Qué variables de entorno se utilizan.
+Qué red interna conecta los servicios.
+Qué volumen conserva los datos de MySQL.
+Qué servicios dependen de otros.
+```
+
+El ZIP del proyecto no corresponde a una imagen Docker completa. El ZIP contiene los archivos necesarios para que Docker pueda construir y levantar el ecosistema de microservicios.
 
 ---
 
-## 6. Estructura de carpetas esperada
+<h2 style="color:#2563eb;">📦 Archivos relevantes del despliegue Docker</h2>
 
-La estructura principal del proyecto es:
-
-```text
-gestion_inv/
-├── 0. eureka-server/
-│   └── Dockerfile
-├── 1. autenticacion/
-├── 2. producto/
-│   └── Dockerfile
-├── 3. creacion-usuario/
-├── 4. anden/
-│   └── Dockerfile
-├── 5. camion/
-│   └── Dockerfile
-├── 6. recepcion/
-│   └── Dockerfile
-├── 7. factura/
-│   └── Dockerfile
-├── 8. desconsolidacion/
-│   └── Dockerfile
-├── 9. warehouse/
-│   └── Dockerfile
-├── 10. stock/
-│   └── Dockerfile
-├── 11. movimiento/
-│   └── Dockerfile
-├── 12. api-gateway/
-│   └── Dockerfile
-├── docs/
-│   └── init.sql
-├── docker-compose.yml
-├── Iniciar.bat
-├── Cerrar.bat
-├── pom.xml
-└── README_Royal_Logistics.md
-```
-
-A diferencia del ejemplo de despliegue basado en carpeta `apps/`, este proyecto construye las imágenes Docker a partir de los `Dockerfile` de cada microservicio. Los `.jar` se generan automáticamente al ejecutar Maven.
+| Archivo / carpeta | Función |
+|---|---|
+| `docker-compose.yml` | Define contenedores, puertos, red, volúmenes y variables de entorno. |
+| `Dockerfile` | Define cómo construir la imagen de cada microservicio. |
+| `docs/init.sql` | Crea las bases de datos requeridas por los microservicios. |
+| `backups/` | Carpeta sugerida para respaldos de base de datos. |
+| `Iniciar.bat` | Script de ejecución Docker en Windows. |
+| `Cerrar.bat` | Script para detener los contenedores. |
+| `pom.xml` | POM padre del proyecto Maven multi-módulo. |
 
 ---
 
-## 7. Archivos `.jar` generados por Maven
+<h2 style="color:#2563eb;">🗄️ Archivo `docs/init.sql`</h2>
 
-Antes de construir las imágenes Docker, Maven empaqueta los microservicios con:
+El archivo `docs/init.sql` permite crear las bases de datos necesarias cuando MySQL se inicia por primera vez dentro del contenedor Docker.
 
-```bash
-mvn clean package -DskipTests
-```
-
-Este comando genera archivos `.jar` dentro de la carpeta `target/` de cada módulo.
-
-Ejemplos:
+Este archivo se monta normalmente dentro del contenedor MySQL en la ruta:
 
 ```text
-0. eureka-server/target/eureka-server-1.0.0-SNAPSHOT.jar
-2. producto/target/producto-1.0.0-SNAPSHOT.jar
-4. anden/target/anden-1.0.0-SNAPSHOT.jar
-5. camion/target/camion-1.0.0-SNAPSHOT.jar
-6. recepcion/target/recepcion-1.0.0-SNAPSHOT.jar
-7. factura/target/factura-1.0.0-SNAPSHOT.jar
-8. desconsolidacion/target/desconsolidacion-1.0.0-SNAPSHOT.jar
-9. warehouse/target/warehouse-1.0.0-SNAPSHOT.jar
-10. stock/target/stock-1.0.0-SNAPSHOT.jar
-11. movimiento/target/movimiento-1.0.0-SNAPSHOT.jar
-12. api-gateway/target/api-gateway-1.0.0-SNAPSHOT.jar
+/docker-entrypoint-initdb.d/init.sql
 ```
 
-Los Dockerfile copian estos `.jar` y los ejecutan dentro de cada contenedor mediante Java.
+MySQL ejecuta automáticamente los scripts ubicados en esa ruta solo cuando se crea el volumen por primera vez.
 
----
+Bases de datos consideradas para Royal Logistics:
 
-## 8. Archivo `docs/init.sql`
-
-El archivo:
-
-```text
-docs/init.sql
+```sql
+CREATE DATABASE IF NOT EXISTS bd_camion;
+CREATE DATABASE IF NOT EXISTS bd_productos;
+CREATE DATABASE IF NOT EXISTS bd_facturas;
+CREATE DATABASE IF NOT EXISTS bd_desconsolidaciones;
+CREATE DATABASE IF NOT EXISTS bd_stock;
+CREATE DATABASE IF NOT EXISTS bd_anden;
+CREATE DATABASE IF NOT EXISTS bd_warehouses;
+CREATE DATABASE IF NOT EXISTS bd_recepciones;
+CREATE DATABASE IF NOT EXISTS bd_movimientos;
+CREATE DATABASE IF NOT EXISTS bd_credenciales;
+CREATE DATABASE IF NOT EXISTS bd_usuarios;
+CREATE DATABASE IF NOT EXISTS bd_camiones;
+CREATE DATABASE IF NOT EXISTS bd_movimiento;
 ```
-
-permite crear las bases de datos necesarias cuando el contenedor MySQL se inicia por primera vez con un volumen nuevo.
-
-Bases consideradas en el script:
-
-```text
-bd_camion
-bd_productos
-bd_facturas
-bd_desconsolidaciones
-bd_stock
-bd_anden
-bd_warehouses
-bd_recepciones
-bd_movimientos
-bd_credenciales
-bd_usuarios
-bd_camiones
-bd_movimiento
-```
-
-El archivo está referenciado desde `docker-compose.yml` mediante:
-
-```yaml
-volumes:
-  - mysql_data:/var/lib/mysql
-  - ./docs/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
-```
-
-Esto significa que Docker toma el archivo local `docs/init.sql` y lo monta dentro del contenedor MySQL para ejecutarlo durante la primera inicialización.
 
 Importante:
 
 ```text
-El init.sql se ejecuta automáticamente solo la primera vez que se crea el volumen de MySQL.
-Si el volumen mysql_data ya existe, MySQL no vuelve a ejecutar este archivo automáticamente.
+El archivo init.sql se ejecuta automáticamente solo la primera vez que se crea el volumen de MySQL.
+Si el volumen ya existe, MySQL no volverá a ejecutar este archivo automáticamente.
 ```
 
-Si se necesita recrear todo desde cero:
+Para recrear el volumen desde cero:
 
 ```bash
 docker compose down -v
+```
+
+```bash
 docker compose up -d --build
 ```
 
-Advertencia:
-
-```text
-No usar docker compose down -v si se desea conservar información de la base de datos.
-Ese comando elimina también el volumen persistente de MySQL.
-```
+Advertencia: `docker compose down -v` elimina los datos persistentes de MySQL.
 
 ---
 
-## 9. Componentes del sistema
-
-| Componente | Descripción | Puerto |
-|---|---|---:|
-| MySQL | Base de datos en contenedor Docker | 3307 externo / 3306 interno |
-| Eureka Server | Servidor de descubrimiento de microservicios | 8761 |
-| API Gateway | Punto de entrada central del sistema | 8080 |
-| Producto | Gestión de productos | 8086 |
-| Stock | Control de stock | 8088 |
-| Movimiento | Registro de movimientos internos | 8089 |
-| Andén | Gestión de andenes | 8083 |
-| Camión | Gestión de camiones | 8082 |
-| Recepción | Registro de recepciones | 8081 |
-| Factura | Registro de facturas | 8085 |
-| Desconsolidación | Desconsolidación de productos | 8084 |
-| Warehouse | Gestión de ubicaciones de bodega | 8087 |
-| Autenticación | Servicio complementario | Puerto dinámico / no incluido en Docker Compose principal |
-| Creación usuario | Servicio complementario | 8092 / no incluido en Docker Compose principal |
-
----
-
-## 10. Orden lógico de arranque
+<h2 style="color:#2563eb;">🧭 Orden lógico de arranque</h2>
 
 Aunque Docker Compose puede levantar todo el sistema con un solo comando, el orden lógico del ecosistema es:
 
@@ -528,163 +485,104 @@ Aunque Docker Compose puede levantar todo el sistema con un solo comando, el ord
 4. API Gateway
 ```
 
-En esta configuración:
+En ejecución nativa, el orden mínimo esperado es:
 
 ```text
-MySQL debe estar disponible para que los microservicios se conecten a sus bases de datos.
-Eureka debe estar disponible para que los servicios se registren.
-API Gateway utiliza Eureka para encontrar los microservicios mediante nombres lógicos.
+1. Eureka Server
+2. Microservicios
+3. API Gateway
 ```
+
+En ambos casos, Eureka debe estar disponible antes de que los servicios intenten registrarse, y el API Gateway debe iniciar después de que los servicios principales estén disponibles.
 
 ---
 
-## 11. Levantar el sistema completo
+<h2 style="color:#2563eb;">▶️ Levantar el sistema con Docker</h2>
 
-Ubicarse en la carpeta raíz del proyecto, donde está el archivo `docker-compose.yml`.
-
-Ejemplo:
+Ubicarse en la raíz del proyecto:
 
 ```bash
-cd /d RUTA\gestion_inv
+cd /d RUTA_DEL_PROYECTO
 ```
 
-Luego ejecutar:
+Ejecutar el script:
+
+```bash
+Iniciar.bat
+```
+
+También se puede ejecutar manualmente:
+
+```bash
+mvn clean package -DskipTests
+```
 
 ```bash
 docker compose up -d --build
 ```
 
-También se puede usar el script incluido:
-
-```text
-Iniciar.bat
-```
-
-El script realiza el siguiente flujo:
-
-```text
-1. Ejecuta mvn clean package -DskipTests.
-2. Construye y levanta los contenedores con Docker Compose.
-3. Espera unos segundos para permitir el arranque de los servicios.
-4. Abre Eureka Server en el navegador.
-```
+La opción `-d` significa **detached mode**, es decir, los contenedores quedan ejecutándose en segundo plano.
 
 ---
 
-## 12. Revisar el estado de los contenedores
+<h2 style="color:#2563eb;">🔎 Revisar contenedores activos</h2>
 
-Ejecutar:
+Para revisar el estado de los contenedores:
 
 ```bash
 docker ps
 ```
 
-or:
+También se puede usar:
 
 ```bash
 docker compose ps
 ```
 
-Resultado esperado:
+Contenedores esperados en el despliegue principal:
 
 ```text
-mysql-db              Up
-logistica-eureka      Up
-logistica-gateway     Up
-logistica-producto    Up
-logistica-stock       Up
-logistica-movimiento  Up
-logistica-anden       Up
-logistica-camion      Up
-logistica-recepcion   Up
-logistica-factura     Up
-logistica-desconsolidacion Up
-logistica-warehouse   Up
+mysql-db
+eureka-server
+api-gateway
+anden
+camion
+recepcion
+factura
+desconsolidacion
+producto
+warehouse
+stock
+movimiento
 ```
-
-Los nombres exactos pueden variar dependiendo de Docker Compose, pero todos los servicios principales deberían quedar en estado `Up` o `running`.
 
 ---
 
-## 13. Levantar servicios de forma progresiva
+<h2 style="color:#2563eb;">🌐 Accesos principales</h2>
 
-Si se desea diagnosticar errores, se pueden levantar servicios por separado:
+Una vez levantado el sistema, se pueden revisar los siguientes accesos. Cada bloque contiene solo la URL para facilitar su copia y pegado en el navegador.
 
-```bash
-docker compose up -d mysql-db
-docker compose up -d eureka-server
-docker compose up -d camion
-docker compose up -d anden
-docker compose up -d warehouse
-docker compose up -d recepcion
-docker compose up -d factura
-docker compose up -d desconsolidacion
-docker compose up -d producto
-docker compose up -d stock
-docker compose up -d movimiento
-docker compose up -d api-gateway
-```
-
-Después de cada servicio, revisar:
-
-```bash
-docker compose ps
-```
-
-y revisar logs del servicio levantado.
-
----
-
-## 14. Revisar logs
-
-Para revisar todos los logs:
-
-```bash
-docker compose logs -f
-```
-
-Para revisar un servicio específico:
-
-```bash
-docker compose logs -f eureka-server
-docker compose logs -f api-gateway
-docker compose logs -f producto
-docker compose logs -f stock
-docker compose logs -f movimiento
-docker compose logs -f mysql-db
-```
-
-Para salir de la visualización de logs:
+**Eureka Server**
 
 ```text
-Ctrl + C
-```
-
-Esto no detiene los contenedores, solo cierra la visualización de logs.
-
----
-
-## 15. Accesos principales
-
-Una vez levantado el sistema, se pueden revisar los siguientes accesos:
-
-```text
-Eureka Server:
 http://localhost:8761
 ```
 
+**API Gateway**
+
 ```text
-API Gateway:
 http://localhost:8080
 ```
 
+**Swagger / OpenAPI centralizado**
+
 ```text
-Swagger / OpenAPI centralizado:
 http://localhost:8080/swagger-ui/index.html
 ```
 
+**Actuator Health del API Gateway**
+
 ```text
-Actuator Health del API Gateway:
 http://localhost:8080/actuator/health
 ```
 
@@ -697,7 +595,106 @@ Si Docker se detiene, el sistema deja de estar disponible.
 
 ---
 
-## 16. Verificación en Eureka
+<h2 style="color:#2563eb;">🧪 Calidad y pruebas unitarias</h2>
+
+El proyecto incorpora una suite de pruebas unitarias y pruebas de controller en los microservicios principales.
+
+Tecnologías utilizadas para testing:
+
+```text
+JUnit 5
+Mockito
+MockMvc
+Spring Boot Test
+```
+
+Para ejecutar la suite completa de pruebas, compilar el proyecto e instalar los artefactos en el repositorio local de Maven:
+
+```bash
+mvn clean install
+```
+
+Este comando ejecuta el reactor Maven completo, valida los módulos, ejecuta las pruebas unitarias configuradas y genera los artefactos correspondientes.
+
+Para ejecutar solo las pruebas sin instalar artefactos:
+
+```bash
+mvn clean test
+```
+
+Prácticas de prueba presentes en el proyecto:
+
+```text
+@Test
+@Mock
+@InjectMocks
+when(...)
+verify(...)
+assertEquals(...)
+assertThrows(...)
+@WebMvcTest
+MockMvc
+```
+
+El resultado esperado de una ejecución correcta es:
+
+```text
+BUILD SUCCESS
+```
+
+---
+
+<h2 style="color:#2563eb;">📚 Documentación Swagger / OpenAPI</h2>
+
+El proyecto utiliza Swagger/OpenAPI para documentar los endpoints REST de los microservicios.
+
+La documentación centralizada se encuentra disponible desde el API Gateway:
+
+```text
+http://localhost:8080/swagger-ui/index.html
+```
+
+Los controladores principales incorporan anotaciones como:
+
+```text
+@Tag
+@Operation
+@ApiResponses
+@ApiResponse
+```
+
+Esto permite documentar:
+
+```text
+Nombre del grupo funcional.
+Descripción del endpoint.
+Códigos HTTP esperados.
+Respuestas exitosas.
+Errores funcionales.
+Rutas disponibles por microservicio.
+```
+
+---
+
+<h2 style="color:#2563eb;">🧾 Verificación de bases de datos</h2>
+
+Para verificar que las bases de datos fueron creadas dentro del contenedor MySQL:
+
+```bash
+docker exec -it mysql-db mysql -u root -proot -e "SHOW DATABASES;"
+```
+
+Para revisar las tablas de una base específica:
+
+```bash
+docker exec -it mysql-db mysql -u root -proot -e "USE bd_productos; SHOW TABLES;"
+```
+
+Si las bases no aparecen y el archivo `docs/init.sql` fue agregado después de haber levantado Docker previamente, es probable que el volumen MySQL ya existiera. En ese caso, `init.sql` no se ejecutará automáticamente hasta crear un volumen nuevo.
+
+---
+
+<h2 style="color:#2563eb;">🧭 Verificación en Eureka</h2>
 
 Abrir en el navegador:
 
@@ -705,11 +702,11 @@ Abrir en el navegador:
 http://localhost:8761
 ```
 
-Se espera visualizar servicios registrados como:
+Servicios esperados en Eureka:
 
 ```text
-API-GATEWAY
 ANDEN
+API-GATEWAY
 CAMION
 DESCONSOLIDACION
 FACTURA
@@ -720,48 +717,9 @@ STOCK
 WAREHOUSE
 ```
 
-Los nombres se originan desde la propiedad:
-
-```yaml
-spring:
-  application:
-    name: nombre-servicio
-```
-
 ---
 
-## 17. Swagger / OpenAPI
-
-La documentación centralizada se puede revisar desde:
-
-```text
-http://localhost:8080/swagger-ui/index.html
-```
-
-Desde el selector de Swagger se puede consultar la documentación de los servicios expuestos, por ejemplo:
-
-```text
-/producto/v3/api-docs
-/stock/v3/api-docs
-/movimiento/v3/api-docs
-/factura/v3/api-docs
-/recepcion/v3/api-docs
-```
-
-Los controllers principales incluyen documentación con:
-
-```text
-@Tag
-@Operation
-@ApiResponses
-@ApiResponse
-```
-
-Esto permite visualizar endpoints, descripciones y códigos de respuesta esperados.
-
----
-
-## 18. Pruebas mediante API Gateway
+<h2 style="color:#2563eb;">🔁 Pruebas mediante API Gateway</h2>
 
 Las rutas principales se prueban mediante el API Gateway en el puerto `8080`.
 
@@ -769,13 +727,37 @@ Ejemplos:
 
 ```text
 http://localhost:8080/api/productos
+```
+
+```text
 http://localhost:8080/api/stock
+```
+
+```text
 http://localhost:8080/api/movimientos
+```
+
+```text
 http://localhost:8080/api/andenes
+```
+
+```text
 http://localhost:8080/api/camiones
+```
+
+```text
 http://localhost:8080/api/recepciones
+```
+
+```text
 http://localhost:8080/api/facturas
+```
+
+```text
 http://localhost:8080/api/desconsolidaciones
+```
+
+```text
 http://localhost:8080/api/warehouse
 ```
 
@@ -783,12 +765,15 @@ Rutas configuradas pero no incluidas en el Docker Compose principal validado:
 
 ```text
 http://localhost:8080/api/empleados
+```
+
+```text
 http://localhost:8080/api/credenciales
 ```
 
 ---
 
-## 19. Rutas principales del API Gateway
+<h2 style="color:#2563eb;">📌 Rutas principales del API Gateway</h2>
 
 | Ruta Gateway | Servicio destino | Estado |
 |---|---|---:|
@@ -801,500 +786,14 @@ http://localhost:8080/api/credenciales
 | `/api/facturas/**` | `lb://factura` | Listo |
 | `/api/desconsolidaciones/**` | `lb://desconsolidacion` | Listo |
 | `/api/warehouse/**` | `lb://warehouse` | Listo |
-| `/api/empleados/**` | `lb://creacion-usuario` | Configurado / fuera del Compose principal |
-| `/api/credenciales/**` | `lb://autenticacion` | Configurado / parcial |
+| `/api/empleados/**` | `lb://creacion-usuario` | Configurado/parcial |
+| `/api/credenciales/**` | `lb://autenticacion` | Configurado/parcial |
 
 ---
 
-## 20. Verificación de bases de datos
+<h2 style="color:#2563eb;">🧾 Endpoints principales por microservicio</h2>
 
-Para verificar que las bases de datos fueron creadas dentro del contenedor MySQL:
-
-```bash
-docker exec -it mysql-db mysql -u root -proot -e "SHOW DATABASES;"
-```
-
-Resultado esperado:
-
-```text
-bd_camion
-bd_productos
-bd_facturas
-bd_desconsolidaciones
-bd_stock
-bd_anden
-bd_warehouses
-bd_recepciones
-bd_movimientos
-bd_credenciales
-bd_usuarios
-bd_camiones
-bd_movimiento
-```
-
-Para revisar tablas de una base específica:
-
-```bash
-docker exec -it mysql-db mysql -u root -proot -e "USE bd_productos; SHOW TABLES;"
-```
-
----
-
-## 21. Pruebas unitarias
-
-El proyecto cuenta con pruebas unitarias y pruebas de controller en los microservicios principales.
-
-Para ejecutar las pruebas:
-
-```bash
-mvn clean test
-```
-
-La ejecución valida el reactor Maven y los módulos principales del proyecto.
-
-Se utilizan herramientas como:
-
-```text
-JUnit 5
-Mockito
-MockMvc
-assertEquals
-assertThrows
-verify
-when
-```
-
-Servicios con pruebas detectadas:
-
-```text
-Producto
-Stock
-Movimiento
-Andén
-Camión
-Recepción
-Factura
-Desconsolidación
-Warehouse
-Eureka Server básico
-```
-
----
-
-## 22. Comandos principales
-
-| Acción | Comando |
-|---|---|
-| Ver versión de Docker | `docker --version` |
-| Ver versión de Docker Compose | `docker compose version` |
-| Ver información de Docker | `docker info` |
-| Compilar y probar | `mvn clean test` |
-| Empaquetar sin pruebas | `mvn clean package -DskipTests` |
-| Levantar todo el sistema | `docker compose up -d --build` |
-| Levantar con script Windows | `Iniciar.bat` |
-| Revisar contenedores | `docker ps` |
-| Revisar contenedores del compose | `docker compose ps` |
-| Ver todos los logs | `docker compose logs -f` |
-| Ver logs de un servicio | `docker compose logs -f nombre-servicio` |
-| Detener sistema | `docker compose down` |
-| Detener con script Windows | `Cerrar.bat` |
-| Detener y borrar volumen | `docker compose down -v` |
-| Ver bases de datos | `docker exec -it mysql-db mysql -u root -proot -e "SHOW DATABASES;"` |
-
----
-
-## 23. Detener el sistema
-
-Para detener los contenedores sin eliminar los datos persistentes:
-
-```bash
-docker compose down
-```
-
-También se puede usar:
-
-```text
-Cerrar.bat
-```
-
-Este comando detiene y elimina los contenedores, pero mantiene el volumen de MySQL.
-
----
-
-## 24. Detener y eliminar datos persistentes
-
-Para detener el sistema y eliminar también el volumen de MySQL:
-
-```bash
-docker compose down -v
-```
-
-Advertencia:
-
-```text
-Este comando elimina los datos persistentes de MySQL.
-Se debe usar solo cuando se quiera reiniciar la base de datos desde cero.
-```
-
-Para detener el sistema sin borrar datos, usar:
-
-```bash
-docker compose down
-```
-
----
-
-## 25. Persistencia de datos de MySQL
-
-El sistema utiliza MySQL dentro de Docker con un volumen persistente:
-
-```yaml
-volumes:
-  mysql_data:
-```
-
-Y en el servicio MySQL:
-
-```yaml
-volumes:
-  - mysql_data:/var/lib/mysql
-```
-
-Esto permite que los datos se mantengan aunque los contenedores se detengan o se vuelvan a crear.
-
-Los datos sí pueden perderse si se elimina el volumen con:
-
-```bash
-docker compose down -v
-```
-
----
-
-## 26. Acceso desde otros equipos de la red
-
-Si se desea acceder desde otro computador de la misma red, no se debe usar `localhost`.
-
-Se debe usar la IP del equipo donde corre Docker.
-
-Ejemplo:
-
-```text
-http://192.168.1.50:8080
-http://192.168.1.50:8761
-```
-
-Importante:
-
-```text
-El firewall de Windows debe permitir el acceso a los puertos utilizados.
-La red debe permitir conexiones hacia el equipo que ejecuta Docker.
-Docker Desktop debe permanecer iniciado.
-Los contenedores deben estar en ejecución.
-```
-
----
-
-## 27. Uso de dominio
-
-Si el sistema se publica usando un dominio, se deben reemplazar las direcciones locales por el dominio correspondiente.
-
-Ejemplo:
-
-```text
-http://localhost:8080
-```
-
-podría cambiar a:
-
-```text
-https://api.royallogistics.cl
-```
-
-En ese caso, se deben revisar especialmente:
-
-```text
-1. Configuración DNS del dominio.
-2. Puertos expuestos públicamente.
-3. Configuración de firewall.
-4. Configuración CORS.
-5. API Gateway.
-6. Certificados HTTPS.
-7. Proxy inverso, si corresponde.
-```
-
----
-
-## 28. Errores comunes
-
-### 28.1 Docker Desktop no está abierto
-
-Mensaje posible:
-
-```text
-Cannot connect to the Docker daemon
-```
-
-Solución:
-
-```text
-Abrir Docker Desktop.
-Esperar a que esté iniciado.
-Volver a ejecutar Iniciar.bat o docker compose up -d --build.
-```
-
----
-
-### 28.2 Puerto ocupado
-
-Mensaje posible:
-
-```text
-port is already allocated
-```
-
-Causa:
-
-```text
-Otro proceso está usando el puerto.
-```
-
-Solución:
-
-```text
-Cambiar el puerto externo en docker-compose.yml o cerrar el proceso que ocupa el puerto.
-```
-
-Ejemplo:
-
-```yaml
-ports:
-  - "8086:8080"
-```
-
-Esto significa:
-
-```text
-Puerto 8086 del computador -> Puerto 8080 del contenedor
-```
-
----
-
-### 28.3 Microservicio no conecta a MySQL
-
-Mensajes posibles:
-
-```text
-Communications link failure
-Connection refused
-Access denied for user
-Unknown database
-```
-
-Revisar:
-
-```text
-Que mysql-db esté running.
-Que la base de datos exista.
-Que el usuario y contraseña sean root/root en Docker.
-Que el microservicio use jdbc:mysql://mysql-db:3306/...
-```
-
-Dentro de Docker no se debe usar:
-
-```text
-localhost
-```
-
-Debe usarse:
-
-```text
-mysql-db
-```
-
----
-
-### 28.4 Microservicio no aparece en Eureka
-
-Revisar que el microservicio tenga configurado dentro de Docker:
-
-```text
-EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-```
-
-Dentro de Docker no debe apuntar a:
-
-```text
-http://localhost:8761/eureka/
-```
-
-Debe apuntar a:
-
-```text
-http://eureka-server:8761/eureka/
-```
-
----
-
-### 28.5 API Gateway no enruta
-
-Posibles causas:
-
-```text
-El microservicio destino no está registrado en Eureka.
-El nombre del servicio no coincide con spring.application.name.
-La ruta del Gateway está mal configurada.
-El Gateway inició antes de que los microservicios estuvieran disponibles.
-```
-
-Solución:
-
-```text
-Verificar Eureka.
-Revisar logs de api-gateway.
-Revisar configuración del Gateway.
-Reiniciar api-gateway si es necesario.
-```
-
----
-
-### 28.6 El archivo .jar no existe
-
-Mensaje posible:
-
-```text
-Unable to access jarfile
-```
-
-Causa probable:
-
-```text
-No se ejecutó mvn clean package -DskipTests antes de construir la imagen.
-```
-
-Solución:
-
-```bash
-mvn clean package -DskipTests
-docker compose up -d --build
-```
-
-O ejecutar:
-
-```text
-Iniciar.bat
-```
-
----
-
-### 28.7 MySQL no ejecuta `init.sql`
-
-Causa probable:
-
-```text
-El volumen mysql_data ya existía.
-```
-
-El script `init.sql` solo se ejecuta automáticamente al crear el volumen por primera vez.
-
-Solución si se desea recrear desde cero:
-
-```bash
-docker compose down -v
-docker compose up -d --build
-```
-
-Advertencia:
-
-```text
-Esto elimina los datos persistentes de MySQL.
-```
-
----
-
-### 28.8 El sistema funciona localmente, pero otros usuarios no pueden entrar
-
-Posibles causas:
-
-```text
-Los usuarios están usando localhost en sus computadores.
-El firewall bloquea el acceso.
-El computador donde corre Docker no está en la misma red.
-Los puertos no están expuestos.
-Docker no está corriendo.
-El computador servidor está apagado.
-```
-
-Solución:
-
-```text
-Usar la IP del equipo donde corre Docker.
-Revisar firewall.
-Verificar docker compose ps.
-Mantener Docker en ejecución.
-```
-
----
-
-## 29. Evidencia recomendada para revisión
-
-Para demostrar que el sistema está funcionando con Docker, se recomienda guardar capturas de:
-
-```text
-1. docker --version.
-2. docker compose version.
-3. mvn clean test con BUILD SUCCESS.
-4. docker ps o docker compose ps.
-5. Eureka Server con servicios registrados.
-6. Swagger UI desde API Gateway.
-7. Endpoint funcionando mediante API Gateway.
-8. Logs de un microservicio iniciado correctamente.
-9. MySQL en ejecución.
-10. SHOW DATABASES dentro del contenedor MySQL.
-```
-
----
-
-## 30. Estado final esperado
-
-Al finalizar correctamente el proceso, se espera:
-
-```text
-MySQL ejecutándose en Docker.
-Eureka Server disponible en http://localhost:8761.
-Microservicios logísticos registrados en Eureka.
-API Gateway disponible en http://localhost:8080.
-Swagger disponible en http://localhost:8080/swagger-ui/index.html.
-Endpoints principales disponibles mediante API Gateway.
-Volumen de MySQL configurado para persistencia.
-Carpeta docs/init.sql disponible para inicialización de bases.
-```
-
----
-
-## 31. Resumen importante
-
-```text
-Docker no reemplaza Spring Boot.
-Docker entrega el entorno controlado donde Spring Boot se ejecuta.
-El ZIP no es una imagen Docker completa.
-Docker Compose configura y levanta el ecosistema.
-Docker Desktop debe estar abierto antes de ejecutar el sistema.
-Si Docker se detiene, el sistema deja de estar disponible.
-Los .jar se generan con Maven dentro de las carpetas target/.
-MySQL corre dentro de un contenedor Docker.
-Dentro de Docker, los servicios deben usar mysql-db y eureka-server, no localhost.
-Si se usa localhost, solo funciona en el equipo local.
-Si se usa IP, puede funcionar dentro de la red.
-Si se usa dominio, se deben ajustar DNS, CORS, Gateway y HTTPS.
-Si se usa volumen Docker, los datos no deberían perderse al reiniciar.
-Los datos sí pueden perderse si se elimina el volumen con docker compose down -v.
-```
-
----
-
-<h2 style="color:#2563eb;">📑 Documentación de endpoints principales</h2>
-
-## Microservicio de Andenes
+### Microservicio de Andenes
 
 **Endpoint base:** `/api/andenes`
 
@@ -1304,9 +803,7 @@ Los datos sí pueden perderse si se elimina el volumen con docker compose down -
 | GET | `/api/andenes/{nAnden}` | Busca un andén por número. |
 | POST | `/api/andenes` | Registra un nuevo andén. |
 
----
-
-## Microservicio de Camiones
+### Microservicio de Camiones
 
 **Endpoint base:** `/api/camiones`
 
@@ -1317,9 +814,7 @@ Los datos sí pueden perderse si se elimina el volumen con docker compose down -
 | POST | `/api/camiones` | Registra un nuevo camión. |
 | DELETE | `/api/camiones/{patente}` | Elimina un camión por patente. |
 
----
-
-## Microservicio de Recepciones
+### Microservicio de Recepciones
 
 **Endpoint base:** `/api/recepciones`
 
@@ -1333,9 +828,7 @@ Los datos sí pueden perderse si se elimina el volumen con docker compose down -
 | GET | `/api/recepciones/anden/{nAnden}` | Busca recepciones por número de andén. |
 | DELETE | `/api/recepciones/{id}` | Elimina una recepción por ID. |
 
----
-
-## Microservicio de Facturas
+### Microservicio de Facturas
 
 **Endpoint base:** `/api/facturas`
 
@@ -1347,11 +840,9 @@ Los datos sí pueden perderse si se elimina el volumen con docker compose down -
 | GET | `/api/facturas/estado/{estado}` | Busca facturas por estado. |
 | GET | `/api/facturas/proveedor/{proveedor}` | Busca facturas por proveedor. |
 | GET | `/api/facturas/recepcion/{idRecepcion}` | Busca facturas por ID de recepción. |
-| DELETE | `/api/facturas/{numeroFactura}` | Elimina una factura por número. |
+| DELETE | `/api/facturas/{nFactura}` | Elimina una factura por número. |
 
----
-
-## Microservicio de Desconsolidaciones
+### Microservicio de Desconsolidaciones
 
 **Endpoint base:** `/api/desconsolidaciones`
 
@@ -1364,15 +855,13 @@ Los datos sí pueden perderse si se elimina el volumen con docker compose down -
 | GET | `/api/desconsolidaciones/cantidad/{cantidadProductos}` | Busca desconsolidaciones por cantidad de productos. |
 | DELETE | `/api/desconsolidaciones/{idDesconsolidacion}` | Elimina una desconsolidación por ID. |
 
----
-
-## Microservicio de Productos
+### Microservicio de Productos
 
 **Endpoint base:** `/api/productos`
 
 | Método | Endpoint | Descripción |
 |---|---|---|
-| GET | `/api/productos` | Lista todos los productos. |
+| GET | `/api/productos` | Lista todos los productos disponibles. |
 | GET | `/api/productos/sku/{sku}` | Busca un producto por SKU. |
 | POST | `/api/productos` | Registra un nuevo producto. |
 | GET | `/api/productos/categoria/{categoria}` | Busca productos por categoría. |
@@ -1380,9 +869,7 @@ Los datos sí pueden perderse si se elimina el volumen con docker compose down -
 | GET | `/api/productos/nombre/{nombreProducto}` | Busca productos por nombre. |
 | DELETE | `/api/productos/{sku}` | Elimina un producto por SKU. |
 
----
-
-## Microservicio de Warehouse
+### Microservicio de Warehouse
 
 **Endpoint base:** `/api/warehouse`
 
@@ -1396,9 +883,7 @@ Los datos sí pueden perderse si se elimina el volumen con docker compose down -
 | GET | `/api/warehouse/nivel/{nivel}` | Busca ubicaciones por nivel. |
 | DELETE | `/api/warehouse/{idUbicacion}` | Elimina una ubicación por ID. |
 
----
-
-## Microservicio de Stock
+### Microservicio de Stock
 
 **Endpoint base:** `/api/stock`
 
@@ -1409,12 +894,8 @@ Los datos sí pueden perderse si se elimina el volumen con docker compose down -
 | POST | `/api/stock` | Registra o actualiza stock. |
 | GET | `/api/stock/producto/sku/{sku}` | Busca stock por SKU de producto. |
 | GET | `/api/stock/ubicacion/{idUbicacion}` | Busca stock por ubicación. |
-| PUT | `/api/stock/descontar` | Descuenta stock. |
-| GET | `/api/stock/critico/{limite}` | Busca stock bajo un límite crítico. |
 
----
-
-## Microservicio de Movimientos
+### Microservicio de Movimientos
 
 **Endpoint base:** `/api/movimientos`
 
@@ -1427,6 +908,171 @@ Los datos sí pueden perderse si se elimina el volumen con docker compose down -
 | GET | `/api/movimientos/tipo/{tipoMovimiento}` | Busca movimientos por tipo. |
 | GET | `/api/movimientos/desconsolidacion/{idDesconsolidacion}` | Busca movimientos por ID de desconsolidación. |
 | DELETE | `/api/movimientos/{idMovimiento}` | Elimina un movimiento por ID. |
+
+---
+
+<h2 style="color:#2563eb;">🧰 Comandos principales</h2>
+
+| Acción | Comando |
+|---|---|
+| Ver versión de Docker | `docker --version` |
+| Ver versión de Docker Compose | `docker compose version` |
+| Ver información de Docker | `docker info` |
+| Compilar, probar e instalar | `mvn clean install` |
+| Ejecutar solo pruebas unitarias | `mvn clean test` |
+| Empaquetar sin pruebas | `mvn clean package -DskipTests` |
+| Levantar sistema con Docker | `docker compose up -d --build` |
+| Revisar contenedores | `docker ps` |
+| Revisar servicios de Compose | `docker compose ps` |
+| Ver todos los logs | `docker compose logs -f` |
+| Ver logs de un servicio | `docker compose logs -f nombre-servicio` |
+| Detener sistema | `docker compose down` |
+| Detener y borrar volumen | `docker compose down -v` |
+| Ver bases de datos | `docker exec -it mysql-db mysql -u root -proot -e "SHOW DATABASES;"` |
+
+---
+
+<h2 style="color:#2563eb;">💾 Persistencia de datos de MySQL</h2>
+
+El sistema utiliza MySQL dentro de Docker. Para conservar los datos, MySQL utiliza un volumen Docker.
+
+Un volumen permite que los datos de la base de datos se mantengan aunque los contenedores se detengan o se vuelvan a crear.
+
+Ejemplo conceptual:
+
+```yaml
+volumes:
+  mysql_data:
+```
+
+```yaml
+volumes:
+  - mysql_data:/var/lib/mysql
+```
+
+Con esta configuración, los datos de MySQL quedan almacenados en un volumen administrado por Docker.
+
+---
+
+<h2 style="color:#2563eb;">🛑 Detener el sistema</h2>
+
+Para detener los contenedores sin borrar los datos:
+
+```bash
+docker compose down
+```
+
+Para detener los contenedores y eliminar también los volúmenes:
+
+```bash
+docker compose down -v
+```
+
+Advertencia:
+
+```text
+No usar docker compose down -v si se desea conservar la información de la base de datos.
+```
+
+---
+
+<h2 style="color:#2563eb;">⚠️ Errores comunes</h2>
+
+### Docker Desktop no está abierto
+
+Mensaje posible:
+
+```text
+Cannot connect to the Docker daemon
+```
+
+Solución:
+
+```text
+Abrir Docker Desktop.
+Esperar a que esté iniciado.
+Volver a ejecutar el comando.
+```
+
+### Puerto ocupado
+
+Mensaje posible:
+
+```text
+port is already allocated
+```
+
+Solución:
+
+```text
+Cambiar el puerto externo en docker-compose.yml o cerrar el proceso que está usando el puerto.
+```
+
+### Microservicio no conecta a MySQL
+
+Revisar:
+
+```text
+Que mysql-db esté running.
+Que la base de datos exista.
+Que usuario y contraseña coincidan.
+Que el microservicio use mysql-db como host dentro de Docker.
+```
+
+Dentro de Docker no debe usarse:
+
+```text
+localhost
+```
+
+Debe usarse:
+
+```text
+mysql-db
+```
+
+### Microservicio no aparece en Eureka
+
+Revisar que el microservicio apunte a:
+
+```text
+http://eureka-server:8761/eureka/
+```
+
+Dentro de Docker no debe apuntar a:
+
+```text
+http://localhost:8761/eureka/
+```
+
+### API Gateway no enruta
+
+Posibles causas:
+
+```text
+El microservicio destino no está registrado en Eureka.
+El nombre del servicio no coincide con spring.application.name.
+La ruta del Gateway está mal configurada.
+El Gateway inició antes de que los microservicios estuvieran disponibles.
+```
+
+---
+
+<h2 style="color:#2563eb;">📸 Evidencia recomendada para revisión</h2>
+
+Para demostrar que el sistema está funcionando, se recomienda guardar capturas de:
+
+```text
+docker --version
+docker compose version
+docker ps o docker compose ps
+Eureka Server con microservicios registrados
+Swagger/OpenAPI centralizado
+Endpoint funcionando mediante API Gateway
+mvn clean install con BUILD SUCCESS
+Bases de datos creadas en MySQL
+Logs de un microservicio iniciado correctamente
+```
 
 ---
 
@@ -1451,9 +1097,46 @@ El presente proyecto fue desarrollado con enfoque académico para la asignatura 
 </p>
 
 <p>
-Su objetivo consiste en representar procesos reales utilizados dentro de operaciones fulfillment y administración de warehouse modernas, utilizando arquitectura de microservicios para mantener una solución modular, escalable y desacoplada.
+Su objetivo consiste en representar procesos reales utilizados actualmente dentro de operaciones fulfillment y administración de warehouse modernas, utilizando arquitectura de microservicios para mantener una solución modular, escalable y desacoplada.
 </p>
 
 <p>
-El sistema integra conceptos de logística, trazabilidad, control de inventario, despliegue con Docker, documentación OpenAPI, pruebas unitarias y arquitectura distribuida con Spring Boot, Eureka Server y API Gateway.
+El sistema busca integrar conceptos de logística, trazabilidad, control de inventario, documentación de APIs, testing automatizado y despliegue local mediante Docker Compose.
 </p>
+
+---
+
+<h2 style="color:#2563eb;">✅ Estado final esperado</h2>
+
+Al finalizar correctamente el proceso, se espera:
+
+```text
+MySQL ejecutándose en Docker.
+Eureka Server disponible en http://localhost:8761.
+Microservicios registrados en Eureka.
+API Gateway disponible en http://localhost:8080.
+Swagger/OpenAPI disponible en http://localhost:8080/swagger-ui/index.html.
+Endpoints principales disponibles mediante API Gateway.
+Suite de pruebas ejecutable con mvn clean install.
+Volumen de MySQL configurado para persistencia.
+Carpeta docs disponible con init.sql.
+```
+
+---
+
+<h2 style="color:#2563eb;">🏁 Conclusión</h2>
+
+Royal Logistics se encuentra preparado como un ecosistema de microservicios defendible para revisión académica. El sistema integra Eureka Server, API Gateway, microservicios logísticos, bases de datos MySQL, documentación Swagger/OpenAPI, pruebas unitarias y despliegue local mediante Docker Compose.
+
+Docker no reemplaza Spring Boot. Docker entrega el entorno controlado donde los microservicios Spring Boot se ejecutan de forma ordenada, aislada y reproducible.
+
+Frases clave:
+
+```text
+Eureka Server permite el descubrimiento de servicios.
+API Gateway centraliza el acceso externo.
+Swagger/OpenAPI documenta los endpoints.
+JUnit 5 y Mockito validan la lógica del sistema.
+Docker Compose levanta el ecosistema completo.
+MySQL persiste sus datos mediante volumen Docker.
+```
